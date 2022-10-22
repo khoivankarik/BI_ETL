@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32929.386
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{C9674DCB-5085-4A16-B785-4C70DD1589BD}") = "19127454_CaseStudy_BI_ETL", "19127454_CaseStudy_BI_ETL\19127454_CaseStudy_BI_ETL.dtproj", "{14C08037-441E-4A95-9EDF-B41AE09DEE8A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Development|Default = Development|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{14C08037-441E-4A95-9EDF-B41AE09DEE8A}.Development|Default.ActiveCfg = Development
+		{14C08037-441E-4A95-9EDF-B41AE09DEE8A}.Development|Default.Build.0 = Development
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DC7CFEEF-29FA-4618-BE12-E634608C900D}
+	EndGlobalSection
+EndGlobal
