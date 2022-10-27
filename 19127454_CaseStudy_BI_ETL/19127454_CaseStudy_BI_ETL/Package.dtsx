@@ -11,8 +11,8 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="Package"
   DTS:PackageType="5"
-  DTS:VersionBuild="11"
-  DTS:VersionGUID="{230EF172-07F9-4EB0-BD74-0272BB53AB2D}">
+  DTS:VersionBuild="12"
+  DTS:VersionGUID="{CF57D52D-4274-4092-B207-17F2ED418C4E}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -86,18 +86,6 @@
           DTS:ConnectRetryCount="1"
           DTS:ConnectRetryInterval="5"
           DTS:ConnectionString="Data Source=localhost;Initial Catalog=Stage;Provider=SQLNCLI11.1;Integrated Security=SSPI;Application Name=SSIS-Package-{CD4A092F-BB56-4B0B-A81D-94101B98B479}localhost.Stage;Auto Translate=False;" />
-      </DTS:ObjectData>
-    </DTS:ConnectionManager>
-    <DTS:ConnectionManager
-      DTS:refId="Package.ConnectionManagers[localhost.Stage 1]"
-      DTS:CreationName="OLEDB"
-      DTS:DTSID="{49120716-EC2A-445B-B209-A47457D561C1}"
-      DTS:ObjectName="localhost.Stage 1">
-      <DTS:ObjectData>
-        <DTS:ConnectionManager
-          DTS:ConnectRetryCount="1"
-          DTS:ConnectRetryInterval="5"
-          DTS:ConnectionString="Data Source=localhost;Initial Catalog=Stage;Provider=SQLNCLI11.1;Integrated Security=SSPI;Application Name=SSIS-Package-{49120716-EC2A-445B-B209-A47457D561C1}localhost.Stage 1;Auto Translate=False;" />
       </DTS:ObjectData>
     </DTS:ConnectionManager>
   </DTS:ConnectionManagers>
@@ -186,8 +174,8 @@
               <connections>
                 <connection
                   refId="Package\Data Flow Task\OLE DB Destination.Connections[OleDbConnection]"
-                  connectionManagerID="Package.ConnectionManagers[localhost.Stage 1]"
-                  connectionManagerRefId="Package.ConnectionManagers[localhost.Stage 1]"
+                  connectionManagerID="Package.ConnectionManagers[localhost.Stage]"
+                  connectionManagerRefId="Package.ConnectionManagers[localhost.Stage]"
                   description="The OLE DB runtime connection used to access the database."
                   name="OleDbConnection" />
               </connections>
