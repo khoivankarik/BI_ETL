@@ -11,11 +11,23 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="CuaHangJupiter_NDS_DDS"
   DTS:PackageType="5"
-  DTS:VersionBuild="9"
-  DTS:VersionGUID="{6BBC273A-22A1-4480-B043-B38E13BD0E2F}">
+  DTS:VersionBuild="40"
+  DTS:VersionGUID="{E8EA869F-50B7-4792-86FC-259285B31AA1}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[localhost.DDS]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{55E97545-A7F0-4DBE-9E98-1D01A9D3AEC4}"
+      DTS:ObjectName="localhost.DDS">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=localhost;Initial Catalog=DDS;Provider=SQLNCLI11.1;Integrated Security=SSPI;Application Name=SSIS-CuaHangJupiter_NDS_DDS-{55E97545-A7F0-4DBE-9E98-1D01A9D3AEC4}localhost.DDS;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
     <DTS:ConnectionManager
       DTS:refId="Package.ConnectionManagers[localhost.METADATA]"
       DTS:CreationName="OLEDB"
@@ -28,8 +40,30 @@
           DTS:ConnectionString="Data Source=localhost;Initial Catalog=METADATA;Provider=SQLNCLI11.1;Integrated Security=SSPI;Application Name=SSIS-CuaHangJupiter_NDS_DDS-{C29B9D5F-A462-4FF9-AA65-ABF8440DD0E7}localhost.METADATA;Auto Translate=False;" />
       </DTS:ObjectData>
     </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[localhost.NDS]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{14F86C5F-34F9-4B38-9CB7-1B30E54647E3}"
+      DTS:ObjectName="localhost.NDS">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=localhost;Initial Catalog=NDS;Provider=SQLNCLI11.1;Integrated Security=SSPI;Application Name=SSIS-CuaHangJupiter_NDS_DDS-{14F86C5F-34F9-4B38-9CB7-1B30E54647E3}localhost.NDS;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
   </DTS:ConnectionManagers>
-  <DTS:Variables />
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{8DB2773D-0DD8-42DA-A569-D44DEE462160}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="LSET">
+      <DTS:VariableValue
+        DTS:DataType="8">1/1/1900</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
   <DTS:Executables>
     <DTS:Executable
       DTS:refId="Package\GET LSET"
@@ -45,23 +79,2116 @@
         <SQLTask:SqlTaskData
           SQLTask:Connection="{C29B9D5F-A462-4FF9-AA65-ABF8440DD0E7}"
           SQLTask:SqlStatementSource="select NgayCapNhat from DDS where TenBang='CuaHang'"
-          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="NgayCapNhat"
+            SQLTask:DtsVariableName="User::LSET" />
+        </SQLTask:SqlTaskData>
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
-      DTS:refId="Package\Update CET"
+      DTS:refId="Package\Handle Dim Cua Hang"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{A2852031-A7BD-4BA9-BCD6-55ABEC9B3080}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Handle Dim Cua Hang"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Handle Dim Cua Hang\Check StoreID exist"
+              componentClassID="Microsoft.Lookup"
+              contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+              description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+              name="Check StoreID exist"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the SQL statement that generates the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=16.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select MaCH from CuaHang</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommandParam"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=16.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select * from (select MaCH from CuaHang) [refTable]
+where [refTable].[MaCH] = ?</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the type of connection used to access the reference dataset."
+                  name="ConnectionType"
+                  typeConverter="LookupConnectionType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the cache type of the lookup table."
+                  name="CacheType"
+                  typeConverter="CacheType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                  name="NoMatchBehavior"
+                  typeConverter="LookupNoMatchBehavior">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                  name="NoMatchCachePercentage">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                  name="MaxMemoryUsage">25</property>
+                <property
+                  dataType="System.Int64"
+                  description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                  name="MaxMemoryUsage64">25</property>
+                <property
+                  dataType="System.String"
+                  description="Indicates whether to reference metadata in an XML format."
+                  name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="MaCH" dataType="DT_STR" length="4" precision="0" scale="0" codePage="1252"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                <property
+                  containsID="true"
+                  dataType="System.String"
+                  description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                  name="ParameterMap">#{Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[MaCH]};</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                  name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Handle Dim Cua Hang\Check StoreID exist.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[localhost.DDS]"
+                  connectionManagerRefId="Package.ConnectionManagers[localhost.DDS]"
+                  description="Connection manager used to access lookup data."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Handle Dim Cua Hang\Check StoreID exist.Inputs[Lookup Input]"
+                  name="Lookup Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Check StoreID exist.Inputs[Lookup Input].Columns[MaCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="MaCH"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[MaCH]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table that a column joins."
+                          name="JoinToReferenceColumn">MaCH</property>
+                        <property
+                          dataType="System.Null"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Handle Dim Cua Hang\Check StoreID exist.Outputs[Lookup Match Output]"
+                  errorOrTruncationOperation="Lookup"
+                  errorRowDisposition="FailComponent"
+                  exclusionGroup="1"
+                  name="Lookup Match Output"
+                  synchronousInputId="Package\Handle Dim Cua Hang\Check StoreID exist.Inputs[Lookup Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Handle Dim Cua Hang\Check StoreID exist.Outputs[Lookup No Match Output]"
+                  description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                  exclusionGroup="1"
+                  name="Lookup No Match Output"
+                  synchronousInputId="Package\Handle Dim Cua Hang\Check StoreID exist.Inputs[Lookup Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Handle Dim Cua Hang\Check StoreID exist.Outputs[Lookup Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Lookup Error Output"
+                  synchronousInputId="Package\Handle Dim Cua Hang\Check StoreID exist.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Check StoreID exist.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\Check StoreID exist.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Check StoreID exist.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\Check StoreID exist.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Handle Dim Cua Hang\Check StoreTypeID exist"
+              componentClassID="Microsoft.Lookup"
+              contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+              description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+              name="Check StoreTypeID exist"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the SQL statement that generates the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=16.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select Ma,MaLoaiCH,TenLoaiCH from LoaiCuaHang</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommandParam"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=16.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select * from (select Ma,MaLoaiCH,TenLoaiCH from LoaiCuaHang) [refTable]
+where [refTable].[Ma] = ?</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the type of connection used to access the reference dataset."
+                  name="ConnectionType"
+                  typeConverter="LookupConnectionType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the cache type of the lookup table."
+                  name="CacheType"
+                  typeConverter="CacheType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                  name="NoMatchBehavior"
+                  typeConverter="LookupNoMatchBehavior">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                  name="NoMatchCachePercentage">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                  name="MaxMemoryUsage">25</property>
+                <property
+                  dataType="System.Int64"
+                  description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                  name="MaxMemoryUsage64">25</property>
+                <property
+                  dataType="System.String"
+                  description="Indicates whether to reference metadata in an XML format."
+                  name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="Ma" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="MaLoaiCH" dataType="DT_STR" length="4" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="TenLoaiCH" dataType="DT_STR" length="50" precision="0" scale="0" codePage="1252"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                <property
+                  containsID="true"
+                  dataType="System.String"
+                  description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                  name="ParameterMap">#{Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[LoaiCH]};</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                  name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[localhost.NDS]"
+                  connectionManagerRefId="Package.ConnectionManagers[localhost.NDS]"
+                  description="Connection manager used to access lookup data."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Inputs[Lookup Input]"
+                  name="Lookup Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Inputs[Lookup Input].Columns[LoaiCH]"
+                      cachedDataType="i4"
+                      cachedName="LoaiCH"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[LoaiCH]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table that a column joins."
+                          name="JoinToReferenceColumn">Ma</property>
+                        <property
+                          dataType="System.Null"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Outputs[Lookup Match Output]"
+                  errorOrTruncationOperation="Lookup"
+                  errorRowDisposition="FailComponent"
+                  exclusionGroup="1"
+                  name="Lookup Match Output"
+                  synchronousInputId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Outputs[Lookup Match Output].Columns[MaLoaiCH]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Copy Column"
+                      length="4"
+                      lineageId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Outputs[Lookup Match Output].Columns[MaLoaiCH]"
+                      name="MaLoaiCH"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn">MaLoaiCH</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Outputs[Lookup Match Output].Columns[TenLoaiCH]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Copy Column"
+                      length="50"
+                      lineageId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Outputs[Lookup Match Output].Columns[TenLoaiCH]"
+                      name="TenLoaiCH"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn">TenLoaiCH</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Outputs[Lookup No Match Output]"
+                  description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                  exclusionGroup="1"
+                  name="Lookup No Match Output"
+                  synchronousInputId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Inputs[Lookup Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Outputs[Lookup Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Lookup Error Output"
+                  synchronousInputId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Handle Dim Cua Hang\Derived Column 2"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="Derived Column 2"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\Handle Dim Cua Hang\Derived Column 2.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Derived Column 2.Inputs[Derived Column Input].Columns[TrangThai]"
+                      cachedDataType="i4"
+                      cachedName="TrangThai"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[TrangThai]"
+                      truncationRowDisposition="FailComponent"
+                      usageType="readWrite">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(DT_I4)("2")</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_I4)("2")</property>
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Handle Dim Cua Hang\Derived Column 2.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\Handle Dim Cua Hang\Derived Column 2.Inputs[Derived Column Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Handle Dim Cua Hang\Derived Column 2.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\Handle Dim Cua Hang\Derived Column 2.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Derived Column 2.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\Derived Column 2.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Derived Column 2.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\Derived Column 2.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Handle Dim Cua Hang\Derived Column 3"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="Derived Column 3"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\Handle Dim Cua Hang\Derived Column 3.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Derived Column 3.Inputs[Derived Column Input].Columns[TrangThai]"
+                      cachedDataType="i4"
+                      cachedName="TrangThai"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[TrangThai]"
+                      truncationRowDisposition="FailComponent"
+                      usageType="readWrite">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(DT_I4)("1")</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_I4)("1")</property>
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Handle Dim Cua Hang\Derived Column 3.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\Handle Dim Cua Hang\Derived Column 3.Inputs[Derived Column Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Handle Dim Cua Hang\Derived Column 3.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\Handle Dim Cua Hang\Derived Column 3.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Derived Column 3.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\Derived Column 3.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Derived Column 3.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\Derived Column 3.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Handle Dim Cua Hang\Insert Destination"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="Insert Destination"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[CuaHang]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=16.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Handle Dim Cua Hang\Insert Destination.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[localhost.DDS]"
+                  connectionManagerRefId="Package.ConnectionManagers[localhost.DDS]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input].Columns[MaCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="MaCH"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input].ExternalColumns[MaCH]"
+                      lineageId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[MaCH]" />
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input].Columns[TenCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="TenCH"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input].ExternalColumns[TenCH]"
+                      lineageId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[TenCH]" />
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input].Columns[MaLoaiCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="MaLoaiCH"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input].ExternalColumns[MaLoaiCH]"
+                      lineageId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[MaLoaiCH]" />
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input].Columns[TenLoaiCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="TenLoaiCH"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input].ExternalColumns[TenLoaiCH]"
+                      lineageId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[TenLoaiCH]" />
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input].Columns[Nuoc]"
+                      cachedDataType="i4"
+                      cachedName="Nuoc"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input].ExternalColumns[Nuoc]"
+                      lineageId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[Nuoc]" />
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input].Columns[NguonDuLieu]"
+                      cachedDataType="i4"
+                      cachedName="NguonDuLieu"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input].ExternalColumns[NguonDuLieu]"
+                      lineageId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[NguonDuLieu]" />
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input].Columns[TrangThai]"
+                      cachedDataType="i4"
+                      cachedName="TrangThai"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input].ExternalColumns[TrangThai]"
+                      lineageId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[TrangThai]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input].ExternalColumns[IDCuaHang]"
+                      dataType="i4"
+                      name="IDCuaHang" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input].ExternalColumns[MaCH]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="MaCH" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input].ExternalColumns[TenCH]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="TenCH" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input].ExternalColumns[MaLoaiCH]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="MaLoaiCH" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input].ExternalColumns[TenLoaiCH]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="TenLoaiCH" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input].ExternalColumns[Nuoc]"
+                      dataType="i4"
+                      name="Nuoc" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input].ExternalColumns[NguonDuLieu]"
+                      dataType="i4"
+                      name="NguonDuLieu" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input].ExternalColumns[TrangThai]"
+                      dataType="i4"
+                      name="TrangThai" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Handle Dim Cua Hang\Insert Destination.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Insert Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\Insert Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Insert Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\Insert Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Handle Dim Cua Hang\OLE DB Command 1"
+              componentClassID="Microsoft.OLEDBCommand"
+              contactInfo="OLE DB Command;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;2"
+              description="Runs an SQL statement for each row in a data flow. For example, call a 'new employee setup' stored procedure for each row in the 'new employees' table. Note: running an SQL statement for each row of a large data flow may take a long time."
+              name="OLE DB Command 1"
+              usesDispositions="true"
+              version="2">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=16.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">UPDATE [dbo].[CuaHang] SET [TrangThai] = ? WHERE [MaCH] = ? AND [TrangThai] = '1'</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Handle Dim Cua Hang\OLE DB Command 1.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[localhost.DDS]"
+                  connectionManagerRefId="Package.ConnectionManagers[localhost.DDS]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Handle Dim Cua Hang\OLE DB Command 1.Inputs[OLE DB Command Input]"
+                  errorOrTruncationOperation="Command Execution"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Command Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Command 1.Inputs[OLE DB Command Input].Columns[MaCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="MaCH"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Command 1.Inputs[OLE DB Command Input].ExternalColumns[Param_1]"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[MaCH]" />
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Command 1.Inputs[OLE DB Command Input].Columns[TrangThai]"
+                      cachedDataType="i4"
+                      cachedName="TrangThai"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Command 1.Inputs[OLE DB Command Input].ExternalColumns[Param_0]"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[TrangThai]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Command 1.Inputs[OLE DB Command Input].ExternalColumns[Param_0]"
+                      dataType="i4"
+                      name="Param_0">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                          name="DBParamInfoFlags">81</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Command 1.Inputs[OLE DB Command Input].ExternalColumns[Param_1]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="Param_1">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                          name="DBParamInfoFlags">65</property>
+                      </properties>
+                    </externalMetadataColumn>
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Handle Dim Cua Hang\OLE DB Command 1.Outputs[OLE DB Command Output]"
+                  exclusionGroup="1"
+                  name="OLE DB Command Output"
+                  synchronousInputId="Package\Handle Dim Cua Hang\OLE DB Command 1.Inputs[OLE DB Command Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Handle Dim Cua Hang\OLE DB Command 1.Outputs[OLE DB Command Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Command Error Output"
+                  synchronousInputId="Package\Handle Dim Cua Hang\OLE DB Command 1.Inputs[OLE DB Command Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Command 1.Outputs[OLE DB Command Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Command 1.Outputs[OLE DB Command Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Command 1.Outputs[OLE DB Command Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Command 1.Outputs[OLE DB Command Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Handle Dim Cua Hang\OLE DB Command 2"
+              componentClassID="Microsoft.OLEDBCommand"
+              contactInfo="OLE DB Command;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;2"
+              description="Runs an SQL statement for each row in a data flow. For example, call a 'new employee setup' stored procedure for each row in the 'new employees' table. Note: running an SQL statement for each row of a large data flow may take a long time."
+              name="OLE DB Command 2"
+              usesDispositions="true"
+              version="2">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=16.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">UPDATE [dbo].[CuaHang] SET [MaLoaiCH] = ?,[NguonDuLieu] = ?,[Nuoc] = ?,[TenCH] = ?,[TenLoaiCH] = ?,[TrangThai] = ? WHERE [MaCH] = ?</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Handle Dim Cua Hang\OLE DB Command 2.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[localhost.DDS]"
+                  connectionManagerRefId="Package.ConnectionManagers[localhost.DDS]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input]"
+                  errorOrTruncationOperation="Command Execution"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Command Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input].Columns[MaCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="MaCH"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input].ExternalColumns[Param_6]"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[MaCH]" />
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input].Columns[MaLoaiCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="MaLoaiCH"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input].ExternalColumns[Param_0]"
+                      lineageId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Outputs[Lookup Match Output].Columns[MaLoaiCH]" />
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input].Columns[NguonDuLieu]"
+                      cachedDataType="i4"
+                      cachedName="NguonDuLieu"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input].ExternalColumns[Param_1]"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[NguonDuLieu]" />
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input].Columns[Nuoc]"
+                      cachedDataType="i4"
+                      cachedName="Nuoc"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input].ExternalColumns[Param_2]"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[Nuoc]" />
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input].Columns[TenCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="TenCH"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input].ExternalColumns[Param_3]"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[TenCH]" />
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input].Columns[TenLoaiCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="TenLoaiCH"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input].ExternalColumns[Param_4]"
+                      lineageId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Outputs[Lookup Match Output].Columns[TenLoaiCH]" />
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input].Columns[TrangThai]"
+                      cachedDataType="i4"
+                      cachedName="TrangThai"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input].ExternalColumns[Param_5]"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[TrangThai]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input].ExternalColumns[Param_0]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="Param_0">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                          name="DBParamInfoFlags">65</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input].ExternalColumns[Param_1]"
+                      dataType="i4"
+                      name="Param_1">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                          name="DBParamInfoFlags">81</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input].ExternalColumns[Param_2]"
+                      dataType="i4"
+                      name="Param_2">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                          name="DBParamInfoFlags">81</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input].ExternalColumns[Param_3]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="Param_3">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                          name="DBParamInfoFlags">65</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input].ExternalColumns[Param_4]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="Param_4">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                          name="DBParamInfoFlags">65</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input].ExternalColumns[Param_5]"
+                      dataType="i4"
+                      name="Param_5">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                          name="DBParamInfoFlags">81</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input].ExternalColumns[Param_6]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="Param_6">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                          name="DBParamInfoFlags">65</property>
+                      </properties>
+                    </externalMetadataColumn>
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Handle Dim Cua Hang\OLE DB Command 2.Outputs[OLE DB Command Output]"
+                  exclusionGroup="1"
+                  name="OLE DB Command Output"
+                  synchronousInputId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Handle Dim Cua Hang\OLE DB Command 2.Outputs[OLE DB Command Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Command Error Output"
+                  synchronousInputId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Command 2.Outputs[OLE DB Command Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Command 2.Outputs[OLE DB Command Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Command 2.Outputs[OLE DB Command Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Command 2.Outputs[OLE DB Command Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Handle Dim Cua Hang\OLE DB Destination"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="OLE DB Destination"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[CuaHang]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=16.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Handle Dim Cua Hang\OLE DB Destination.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[localhost.DDS]"
+                  connectionManagerRefId="Package.ConnectionManagers[localhost.DDS]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[MaCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="MaCH"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[MaCH]"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[MaCH]" />
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[TenCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="TenCH"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[TenCH]"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[TenCH]" />
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Nuoc]"
+                      cachedDataType="i4"
+                      cachedName="Nuoc"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Nuoc]"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[Nuoc]" />
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[NguonDuLieu]"
+                      cachedDataType="i4"
+                      cachedName="NguonDuLieu"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[NguonDuLieu]"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[NguonDuLieu]" />
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[TrangThai]"
+                      cachedDataType="i4"
+                      cachedName="TrangThai"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[TrangThai]"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[TrangThai]" />
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[MaLoaiCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="MaLoaiCH"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[MaLoaiCH]"
+                      lineageId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Outputs[Lookup Match Output].Columns[MaLoaiCH]" />
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[TenLoaiCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="TenLoaiCH"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[TenLoaiCH]"
+                      lineageId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Outputs[Lookup Match Output].Columns[TenLoaiCH]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[IDCuaHang]"
+                      dataType="i4"
+                      name="IDCuaHang" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[MaCH]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="MaCH" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[TenCH]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="TenCH" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[MaLoaiCH]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="MaLoaiCH" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[TenLoaiCH]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="TenLoaiCH" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Nuoc]"
+                      dataType="i4"
+                      name="Nuoc" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[NguonDuLieu]"
+                      dataType="i4"
+                      name="NguonDuLieu" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[TrangThai]"
+                      dataType="i4"
+                      name="TrangThai" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Handle Dim Cua Hang\OLE DB Destination.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Handle Dim Cua Hang\OLE DB Source"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="OLE DB Source"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=16.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select * from CuaHang</property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Handle Dim Cua Hang\OLE DB Source.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[localhost.NDS]"
+                  connectionManagerRefId="Package.ConnectionManagers[localhost.NDS]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[Ma]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Ma]"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[Ma]"
+                      name="Ma"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[MaCH]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[MaCH]"
+                      length="4"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[MaCH]"
+                      name="MaCH"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[TenCH]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[TenCH]"
+                      length="50"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[TenCH]"
+                      name="TenCH"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[LoaiCH]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[LoaiCH]"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[LoaiCH]"
+                      name="LoaiCH"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[Nuoc]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Nuoc]"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[Nuoc]"
+                      name="Nuoc"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[NguonDuLieu]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[NguonDuLieu]"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[NguonDuLieu]"
+                      name="NguonDuLieu"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[TrangThai]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[TrangThai]"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[TrangThai]"
+                      name="TrangThai"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[NgayTao]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[NgayTao]"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[NgayTao]"
+                      name="NgayTao"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[NgayCapNhat]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[NgayCapNhat]"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[NgayCapNhat]"
+                      name="NgayCapNhat"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Ma]"
+                      dataType="i4"
+                      name="Ma" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[MaCH]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="MaCH" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[TenCH]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="TenCH" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[LoaiCH]"
+                      dataType="i4"
+                      name="LoaiCH" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Nuoc]"
+                      dataType="i4"
+                      name="Nuoc" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[NguonDuLieu]"
+                      dataType="i4"
+                      name="NguonDuLieu" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[TrangThai]"
+                      dataType="i4"
+                      name="TrangThai" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[NgayTao]"
+                      dataType="dbTimeStamp"
+                      name="NgayTao" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[NgayCapNhat]"
+                      dataType="dbTimeStamp"
+                      name="NgayCapNhat" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Ma]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Ma]"
+                      name="Ma" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[MaCH]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[MaCH]"
+                      name="MaCH" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[TenCH]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[TenCH]"
+                      name="TenCH" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[LoaiCH]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[LoaiCH]"
+                      name="LoaiCH" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Nuoc]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Nuoc]"
+                      name="Nuoc" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[NguonDuLieu]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[NguonDuLieu]"
+                      name="NguonDuLieu" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[TrangThai]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[TrangThai]"
+                      name="TrangThai" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[NgayTao]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[NgayTao]"
+                      name="NgayTao" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[NgayCapNhat]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[NgayCapNhat]"
+                      name="NgayCapNhat" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Handle Dim Cua Hang\Slowly Changing Dimension"
+              componentClassID="Microsoft.SCD"
+              contactInfo="Slowly Changing Dimension;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;3"
+              description="Updates a SQL Server Analysis Services data warehouse dimension. Update dimension records that are already present and  insert dimension records that aren't. For example, update the DimProduct table of the AdventureWorksDW OLAP database with data from the Products table in the AdventureWorks OLTP database."
+              name="Slowly Changing Dimension"
+              version="3">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the SELECT statement used to create a schema rowset."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=16.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT [MaCH], [TenCH], [TrangThai] FROM [dbo].[CuaHang]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the WHERE clause in the SELECT statement that selects the current row among rows with identical business keys."
+                  name="CurrentRowWhere">[TrangThai] = '1'</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether historical attribute updates are directed to the transformation output for changing attribute updates."
+                  name="UpdateChangingAttributeHistory">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the transformation fails when columns with fixed attributes contain changes."
+                  name="FailOnFixedAttributeChange">true</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the column name for the inferred member."
+                  name="InferredMemberIndicator"></property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether inferred member updates are detected."
+                  name="EnableInferredMember">true</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the transformation fails when a lookup of an existing record fails."
+                  name="FailOnLookupFailure">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies that all rows in the input are new or the transformation detects the change type."
+                  name="IncomingRowChangeType"
+                  typeConverter="IncomingRowChangeType">1</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Connections[LookupConnection]"
+                  connectionManagerID="Package.ConnectionManagers[localhost.DDS]"
+                  connectionManagerRefId="Package.ConnectionManagers[localhost.DDS]"
+                  description="Defines the connection to use for lookups in the dimension table"
+                  name="LookupConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Inputs[Slowly Changing Dimension Input]"
+                  name="Slowly Changing Dimension Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Inputs[Slowly Changing Dimension Input].Columns[MaCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="MaCH"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Inputs[Slowly Changing Dimension Input].ExternalColumns[MaCH]"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[MaCH]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          name="ColumnType"
+                          typeConverter="ColumnType">1</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Inputs[Slowly Changing Dimension Input].Columns[TenCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="TenCH"
+                      externalMetadataColumnId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Inputs[Slowly Changing Dimension Input].ExternalColumns[TenCH]"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[TenCH]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          name="ColumnType"
+                          typeConverter="ColumnType">3</property>
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Inputs[Slowly Changing Dimension Input].ExternalColumns[MaCH]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      name="MaCH" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Inputs[Slowly Changing Dimension Input].ExternalColumns[TenCH]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="TenCH" />
+                    <externalMetadataColumn
+                      refId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Inputs[Slowly Changing Dimension Input].ExternalColumns[TrangThai]"
+                      dataType="i4"
+                      name="TrangThai" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Outputs[Unchanged Output]"
+                  description="Unchanged rows"
+                  exclusionGroup="1"
+                  name="Unchanged Output"
+                  synchronousInputId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Inputs[Slowly Changing Dimension Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Outputs[New Output]"
+                  description="New rows"
+                  exclusionGroup="1"
+                  name="New Output"
+                  synchronousInputId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Inputs[Slowly Changing Dimension Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Outputs[Fixed Attribute Output]"
+                  description="Rows with changes in columns tagged FixedAttribute"
+                  exclusionGroup="1"
+                  name="Fixed Attribute Output"
+                  synchronousInputId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Inputs[Slowly Changing Dimension Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Outputs[Changing Attribute Updates Output]"
+                  description="These rows contain new information for ChangingAttribute (Type 1) column changes"
+                  exclusionGroup="1"
+                  name="Changing Attribute Updates Output"
+                  synchronousInputId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Inputs[Slowly Changing Dimension Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Outputs[Historical Attribute Inserts Output]"
+                  description="HistoricalAttribute (Type 2) changes result in these new rows"
+                  exclusionGroup="2"
+                  name="Historical Attribute Inserts Output"
+                  synchronousInputId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Inputs[Slowly Changing Dimension Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Outputs[Inferred Member Updates Output]"
+                  description="Information to update unpopulated initial dimension row"
+                  exclusionGroup="1"
+                  name="Inferred Member Updates Output"
+                  synchronousInputId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Inputs[Slowly Changing Dimension Input]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Handle Dim Cua Hang\Union All 1"
+              componentClassID="Microsoft.UnionAll"
+              contactInfo="Union All;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+              description="Combines rows from multiple data flows without sorting. For example, add rows back to a data flow after correction of errors. If sorting is important, we recommend using the Merge transformation."
+              name="Union All 1"
+              version="1">
+              <inputs>
+                <input
+                  refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 1]"
+                  name="Union All Input 1">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 1].Columns[Ma]"
+                      cachedDataType="i4"
+                      cachedName="Ma"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[Ma]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[Ma]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 1].Columns[MaCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="MaCH"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[MaCH]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[MaCH]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 1].Columns[TenCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="TenCH"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[TenCH]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[TenCH]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 1].Columns[LoaiCH]"
+                      cachedDataType="i4"
+                      cachedName="LoaiCH"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[LoaiCH]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[LoaiCH]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 1].Columns[Nuoc]"
+                      cachedDataType="i4"
+                      cachedName="Nuoc"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[Nuoc]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[Nuoc]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 1].Columns[NguonDuLieu]"
+                      cachedDataType="i4"
+                      cachedName="NguonDuLieu"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[NguonDuLieu]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[NguonDuLieu]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 1].Columns[TrangThai]"
+                      cachedDataType="i4"
+                      cachedName="TrangThai"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[TrangThai]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[TrangThai]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 1].Columns[NgayTao]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="NgayTao"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[NgayTao]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[NgayTao]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 1].Columns[NgayCapNhat]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="NgayCapNhat"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[NgayCapNhat]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[NgayCapNhat]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 1].Columns[MaLoaiCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="MaLoaiCH"
+                      lineageId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Outputs[Lookup Match Output].Columns[MaLoaiCH]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[MaLoaiCH]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 1].Columns[TenLoaiCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="TenLoaiCH"
+                      lineageId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Outputs[Lookup Match Output].Columns[TenLoaiCH]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[TenLoaiCH]}</property>
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+                <input
+                  refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 2]"
+                  hasSideEffects="true"
+                  name="Union All Input 2">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 2].Columns[Ma]"
+                      cachedDataType="i4"
+                      cachedName="Ma"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[Ma]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[Ma]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 2].Columns[MaCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="MaCH"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[MaCH]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[MaCH]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 2].Columns[TenCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="TenCH"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[TenCH]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[TenCH]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 2].Columns[LoaiCH]"
+                      cachedDataType="i4"
+                      cachedName="LoaiCH"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[LoaiCH]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[LoaiCH]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 2].Columns[Nuoc]"
+                      cachedDataType="i4"
+                      cachedName="Nuoc"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[Nuoc]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[Nuoc]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 2].Columns[NguonDuLieu]"
+                      cachedDataType="i4"
+                      cachedName="NguonDuLieu"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[NguonDuLieu]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[NguonDuLieu]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 2].Columns[TrangThai]"
+                      cachedDataType="i4"
+                      cachedName="TrangThai"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[TrangThai]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[TrangThai]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 2].Columns[NgayTao]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="NgayTao"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[NgayTao]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[NgayTao]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 2].Columns[NgayCapNhat]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="NgayCapNhat"
+                      lineageId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output].Columns[NgayCapNhat]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[NgayCapNhat]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 2].Columns[MaLoaiCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="4"
+                      cachedName="MaLoaiCH"
+                      lineageId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Outputs[Lookup Match Output].Columns[MaLoaiCH]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[MaLoaiCH]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 2].Columns[TenLoaiCH]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="TenLoaiCH"
+                      lineageId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Outputs[Lookup Match Output].Columns[TenLoaiCH]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Output column lineage ID"
+                          name="OutputColumnLineageID">#{Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[TenLoaiCH]}</property>
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+                <input
+                  refId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 3]"
+                  dangling="true"
+                  hasSideEffects="true"
+                  name="Union All Input 3">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1]"
+                  name="Union All Output 1">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[Ma]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[Ma]"
+                      name="Ma" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[MaCH]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      lineageId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[MaCH]"
+                      name="MaCH" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[TenCH]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[TenCH]"
+                      name="TenCH" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[LoaiCH]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[LoaiCH]"
+                      name="LoaiCH" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[Nuoc]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[Nuoc]"
+                      name="Nuoc" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[NguonDuLieu]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[NguonDuLieu]"
+                      name="NguonDuLieu" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[TrangThai]"
+                      dataType="i4"
+                      lineageId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[TrangThai]"
+                      name="TrangThai" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[NgayTao]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[NgayTao]"
+                      name="NgayTao" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[NgayCapNhat]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[NgayCapNhat]"
+                      name="NgayCapNhat" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[MaLoaiCH]"
+                      codePage="1252"
+                      dataType="str"
+                      length="4"
+                      lineageId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[MaLoaiCH]"
+                      name="MaLoaiCH" />
+                    <outputColumn
+                      refId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[TenLoaiCH]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1].Columns[TenLoaiCH]"
+                      name="TenLoaiCH" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Handle Dim Cua Hang.Paths[Derived Column Output]"
+              endId="Package\Handle Dim Cua Hang\OLE DB Command 1.Inputs[OLE DB Command Input]"
+              name="Derived Column Output"
+              startId="Package\Handle Dim Cua Hang\Derived Column 2.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\Handle Dim Cua Hang.Paths[Derived Column Output1]"
+              endId="Package\Handle Dim Cua Hang\Insert Destination.Inputs[OLE DB Destination Input]"
+              name="Derived Column Output"
+              startId="Package\Handle Dim Cua Hang\Derived Column 3.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\Handle Dim Cua Hang.Paths[Historical Attribute Inserts Output]"
+              endId="Package\Handle Dim Cua Hang\Derived Column 2.Inputs[Derived Column Input]"
+              name="Historical Attribute Inserts Output"
+              startId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Outputs[Historical Attribute Inserts Output]" />
+            <path
+              refId="Package\Handle Dim Cua Hang.Paths[Inferred Member Updates Output]"
+              endId="Package\Handle Dim Cua Hang\OLE DB Command 2.Inputs[OLE DB Command Input]"
+              name="Inferred Member Updates Output"
+              startId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Outputs[Inferred Member Updates Output]" />
+            <path
+              refId="Package\Handle Dim Cua Hang.Paths[Lookup Error Output]"
+              endId="Package\Handle Dim Cua Hang\OLE DB Destination.Inputs[OLE DB Destination Input]"
+              name="Lookup Error Output"
+              startId="Package\Handle Dim Cua Hang\Check StoreID exist.Outputs[Lookup Error Output]" />
+            <path
+              refId="Package\Handle Dim Cua Hang.Paths[Lookup Match Output]"
+              endId="Package\Handle Dim Cua Hang\Check StoreID exist.Inputs[Lookup Input]"
+              name="Lookup Match Output"
+              startId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Outputs[Lookup Match Output]" />
+            <path
+              refId="Package\Handle Dim Cua Hang.Paths[Lookup Match Output1]"
+              endId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Inputs[Slowly Changing Dimension Input]"
+              name="Lookup Match Output"
+              startId="Package\Handle Dim Cua Hang\Check StoreID exist.Outputs[Lookup Match Output]" />
+            <path
+              refId="Package\Handle Dim Cua Hang.Paths[New Output]"
+              endId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 1]"
+              name="New Output"
+              startId="Package\Handle Dim Cua Hang\Slowly Changing Dimension.Outputs[New Output]" />
+            <path
+              refId="Package\Handle Dim Cua Hang.Paths[OLE DB Command Output]"
+              endId="Package\Handle Dim Cua Hang\Union All 1.Inputs[Union All Input 2]"
+              name="OLE DB Command Output"
+              startId="Package\Handle Dim Cua Hang\OLE DB Command 1.Outputs[OLE DB Command Output]" />
+            <path
+              refId="Package\Handle Dim Cua Hang.Paths[OLE DB Source Output]"
+              endId="Package\Handle Dim Cua Hang\Check StoreTypeID exist.Inputs[Lookup Input]"
+              name="OLE DB Source Output"
+              startId="Package\Handle Dim Cua Hang\OLE DB Source.Outputs[OLE DB Source Output]" />
+            <path
+              refId="Package\Handle Dim Cua Hang.Paths[Union All Output 1]"
+              endId="Package\Handle Dim Cua Hang\Derived Column 3.Inputs[Derived Column Input]"
+              name="Union All Output 1"
+              startId="Package\Handle Dim Cua Hang\Union All 1.Outputs[Union All Output 1]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Set LSET"
       DTS:CreationName="Microsoft.ExecuteSQLTask"
       DTS:Description="Execute SQL Task"
-      DTS:DTSID="{B61625FD-B383-46A5-8F2C-2B87310EBC06}"
+      DTS:DTSID="{62906F31-F6E2-46D5-A163-CF3DB997D326}"
       DTS:ExecutableType="Microsoft.ExecuteSQLTask"
       DTS:LocaleID="-1"
-      DTS:ObjectName="Update CET"
+      DTS:ObjectName="Set LSET"
       DTS:ThreadHint="0">
       <DTS:Variables />
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
           SQLTask:Connection="{C29B9D5F-A462-4FF9-AA65-ABF8440DD0E7}"
-          SQLTask:SqlStatementSource="update DDS set NgayTao= GETDATE() where Name = 'CuaHang'" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          SQLTask:SqlStatementSource="update DDS set NgayCapNhat = GETDATE() where TenBang = 'CuaHang'" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
       </DTS:ObjectData>
     </DTS:Executable>
   </DTS:Executables>
@@ -69,11 +2196,19 @@
     <DTS:PrecedenceConstraint
       DTS:refId="Package.PrecedenceConstraints[Constraint]"
       DTS:CreationName=""
-      DTS:DTSID="{6763F599-C716-47DD-A2B5-472225839033}"
-      DTS:From="Package\Update CET"
+      DTS:DTSID="{59057061-721C-4ED4-9CB2-8C414EB7D87E}"
+      DTS:From="Package\Handle Dim Cua Hang"
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint"
-      DTS:To="Package\GET LSET" />
+      DTS:To="Package\Set LSET" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{017F607E-5F52-40E8-B470-1CB879BE0D33}"
+      DTS:From="Package\GET LSET"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Handle Dim Cua Hang" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
 <!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
@@ -86,41 +2221,55 @@
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
-        <NodeLayout
-          Size="135,42"
-          Id="Package\Update CET"
-          TopLeft="427,95" />
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="163,42"
           Id="Package\GET LSET"
-          TopLeft="430,214" />
+          TopLeft="425,201" />
+        <NodeLayout
+          Size="183,42"
+          Id="Package\Handle Dim Cua Hang"
+          TopLeft="419,301" />
         <EdgeLayout
-          Id="Package.PrecedenceConstraints[Constraint]"
-          TopLeft="494.5,137">
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="508.5,243">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="17,77"
+              EndConnector="0,58"
               Start="0,0"
-              End="17,69.5">
+              End="0,50.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,34.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,34.5"
-                    Point2="0,38.5"
-                    Point3="4,38.5" />
+                    End="0,50.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="163,42"
+          Id="Package\Set LSET"
+          TopLeft="422,392" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="507,343">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,49"
+              Start="0,0"
+              End="0,41.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
                   <mssgle:LineSegment
-                    End="13,38.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="13,38.5"
-                    Point2="17,38.5"
-                    Point3="17,42.5" />
-                  <mssgle:LineSegment
-                    End="17,69.5" />
+                    End="0,41.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -132,5 +2281,539 @@
       </GraphLayout>
     </LayoutInfo>
   </Package>
+  <TaskHost
+    design-time-name="Package\Handle Dim Cua Hang">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="209,42"
+          Id="Package\Handle Dim Cua Hang\Slowly Changing Dimension"
+          TopLeft="603,311.5" />
+        <NodeLayout
+          Size="150,42"
+          Id="Package\Handle Dim Cua Hang\OLE DB Source"
+          TopLeft="651.611111111111,7.72222222222199" />
+        <NodeLayout
+          Size="195,42"
+          Id="Package\Handle Dim Cua Hang\Check StoreTypeID exist"
+          TopLeft="623.555555555556,105.277777777778" />
+        <EdgeLayout
+          Id="Package\Handle Dim Cua Hang.Paths[OLE DB Source Output]"
+          TopLeft="723.833333333333,49.722222222222">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,55.5555555555556"
+              Start="0,0"
+              End="0,48.0555555555556">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,48.0555555555556" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="171,42"
+          Id="Package\Handle Dim Cua Hang\Check StoreID exist"
+          TopLeft="732.222222222222,209.5" />
+        <EdgeLayout
+          Id="Package\Handle Dim Cua Hang.Paths[Lookup Match Output]"
+          TopLeft="721.055555555556,147.277777777778">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="96.6666666666666,62.2222222222223"
+              Start="0,0"
+              End="96.6666666666666,54.7222222222223">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,27.1111111111111" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,27.1111111111111"
+                    Point2="0,31.1111111111111"
+                    Point3="4,31.1111111111111" />
+                  <mssgle:LineSegment
+                    End="92.6666666666666,31.1111111111111" />
+                  <mssgle:CubicBezierSegment
+                    Point1="92.6666666666666,31.1111111111111"
+                    Point2="96.6666666666666,31.1111111111111"
+                    Point3="96.6666666666666,35.1111111111111" />
+                  <mssgle:LineSegment
+                    End="96.6666666666666,54.7222222222223" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0.141946614583311,36.1111111111111,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Handle Dim Cua Hang.Paths[Lookup Match Output1]"
+          TopLeft="790.555555555556,251.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-83.0555555555555,60"
+              Start="0,0"
+              End="-83.0555555555555,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,20.3337195828505" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,20.3337195828505"
+                    Point2="0,24.3337195828505"
+                    Point3="-4,24.3337195828505" />
+                  <mssgle:LineSegment
+                    End="-79.0555555555555,24.3337195828505" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-79.0555555555555,24.3337195828505"
+                    Point2="-83.0555555555555,24.3337195828505"
+                    Point3="-83.0555555555555,28.3337195828505" />
+                  <mssgle:LineSegment
+                    End="-83.0555555555555,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-89.7191644965278,29.3337195828505,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="163,42"
+          Id="Package\Handle Dim Cua Hang\Derived Column 2"
+          TopLeft="483,413.5" />
+        <EdgeLayout
+          Id="Package\Handle Dim Cua Hang.Paths[Historical Attribute Inserts Output]"
+          TopLeft="657.25,353.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-92.75,60"
+              Start="0,0"
+              End="-92.75,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,16.503937007874" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,16.503937007874"
+                    Point2="0,20.503937007874"
+                    Point3="-4,20.503937007874" />
+                  <mssgle:LineSegment
+                    End="-88.75,20.503937007874" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-88.75,20.503937007874"
+                    Point2="-92.75,20.503937007874"
+                    Point3="-92.75,24.503937007874" />
+                  <mssgle:LineSegment
+                    End="-92.75,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-57.5424978298611,26.6430446194226,150.1127734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="175,42"
+          Id="Package\Handle Dim Cua Hang\OLE DB Command 1"
+          TopLeft="471,515.5" />
+        <EdgeLayout
+          Id="Package\Handle Dim Cua Hang.Paths[Derived Column Output]"
+          TopLeft="561.5,455.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="130,42"
+          Id="Package\Handle Dim Cua Hang\Union All 1"
+          TopLeft="642.5,617.5" />
+        <EdgeLayout
+          Id="Package\Handle Dim Cua Hang.Paths[New Output]"
+          TopLeft="707.5,353.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="20.3333333333334,264"
+              Start="0,0"
+              End="20.3333333333334,256.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,152.474164133739" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,152.474164133739"
+                    Point2="0,156.474164133739"
+                    Point3="4,156.474164133739" />
+                  <mssgle:LineSegment
+                    End="16.3333333333334,156.474164133739" />
+                  <mssgle:CubicBezierSegment
+                    Point1="16.3333333333334,156.474164133739"
+                    Point2="20.3333333333334,156.474164133739"
+                    Point3="20.3333333333334,160.474164133739" />
+                  <mssgle:LineSegment
+                    End="20.3333333333334,256.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-16.9247200520833,161.474164133739,54.1827734375,11.43359375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Handle Dim Cua Hang.Paths[OLE DB Command Output]"
+          TopLeft="558.5,557.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="128.666666666667,60"
+              Start="0,0"
+              End="128.666666666667,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.5623100303952" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,31.5623100303952"
+                    Point2="0,35.5623100303952"
+                    Point3="4,35.5623100303952" />
+                  <mssgle:LineSegment
+                    End="124.666666666667,35.5623100303952" />
+                  <mssgle:CubicBezierSegment
+                    Point1="124.666666666667,35.5623100303952"
+                    Point2="128.666666666667,35.5623100303952"
+                    Point3="128.666666666667,39.5623100303952" />
+                  <mssgle:LineSegment
+                    End="128.666666666667,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="163,42"
+          Id="Package\Handle Dim Cua Hang\Derived Column 3"
+          TopLeft="626,719.5" />
+        <EdgeLayout
+          Id="Package\Handle Dim Cua Hang.Paths[Union All Output 1]"
+          TopLeft="707.5,659.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="163,42"
+          Id="Package\Handle Dim Cua Hang\Insert Destination"
+          TopLeft="626,821.5" />
+        <EdgeLayout
+          Id="Package\Handle Dim Cua Hang.Paths[Derived Column Output1]"
+          TopLeft="707.5,761.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="175,42"
+          Id="Package\Handle Dim Cua Hang\OLE DB Command 2"
+          TopLeft="769,413.5" />
+        <EdgeLayout
+          Id="Package\Handle Dim Cua Hang.Paths[Inferred Member Updates Output]"
+          TopLeft="757.75,353.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="98.75,60"
+              Start="0,0"
+              End="98.75,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,16.503937007874" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,16.503937007874"
+                    Point2="0,20.503937007874"
+                    Point3="4,20.503937007874" />
+                  <mssgle:LineSegment
+                    End="94.75,20.503937007874" />
+                  <mssgle:CubicBezierSegment
+                    Point1="94.75,20.503937007874"
+                    Point2="98.75,20.503937007874"
+                    Point3="98.75,24.503937007874" />
+                  <mssgle:LineSegment
+                    End="98.75,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-25.02798828125,25.503937007874,148.8059765625,11.658203125"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="171,42"
+          Id="Package\Handle Dim Cua Hang\OLE DB Destination"
+          TopLeft="922.222222222223,318.888888888889" />
+        <EdgeLayout
+          Id="Package\Handle Dim Cua Hang.Paths[Lookup Error Output]"
+          TopLeft="844.888888888889,251.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="162.833333333334,67.3888888888891"
+              Start="0,0"
+              End="162.833333333334,59.8888888888891">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,23.330372087035" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,23.330372087035"
+                    Point2="0,27.330372087035"
+                    Point3="4,27.330372087035" />
+                  <mssgle:LineSegment
+                    End="158.833333333334,27.330372087035" />
+                  <mssgle:CubicBezierSegment
+                    Point1="158.833333333334,27.330372087035"
+                    Point2="162.833333333334,27.330372087035"
+                    Point3="162.833333333334,31.330372087035" />
+                  <mssgle:LineSegment
+                    End="162.833333333334,59.8888888888891" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="35.5502799479168,32.330372087035,91.7327734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Handle Dim Cua Hang\Slowly Changing Dimension">
+    <Properties>
+      <Property>
+        <Name>SCDMetadata</Name>
+        <Value
+          type="q2:string">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SCDWizardMetadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionID&gt;{55E97545-A7F0-4DBE-9E98-1D01A9D3AEC4}&lt;/ConnectionID&gt;
+  &lt;TableName&gt;[dbo].[CuaHang]&lt;/TableName&gt;
+  &lt;InputToColumnsCollection&gt;
+    &lt;InputColumnToDBColumn&gt;
+      &lt;IdentificationString&gt;OLE DB Source.Outputs[OLE DB Source Output].Columns[MaCH]&lt;/IdentificationString&gt;
+      &lt;ColumnName&gt;MaCH&lt;/ColumnName&gt;
+      &lt;KeyType&gt;BusinessKey&lt;/KeyType&gt;
+      &lt;ChangeType&gt;None&lt;/ChangeType&gt;
+    &lt;/InputColumnToDBColumn&gt;
+    &lt;InputColumnToDBColumn&gt;
+      &lt;IdentificationString&gt;Check StoreTypeID exist.Outputs[Lookup Match Output].Columns[MaLoaiCH]&lt;/IdentificationString&gt;
+      &lt;ColumnName&gt;MaLoaiCH&lt;/ColumnName&gt;
+      &lt;KeyType&gt;None&lt;/KeyType&gt;
+      &lt;ChangeType&gt;None&lt;/ChangeType&gt;
+    &lt;/InputColumnToDBColumn&gt;
+    &lt;InputColumnToDBColumn&gt;
+      &lt;IdentificationString&gt;OLE DB Source.Outputs[OLE DB Source Output].Columns[NguonDuLieu]&lt;/IdentificationString&gt;
+      &lt;ColumnName&gt;NguonDuLieu&lt;/ColumnName&gt;
+      &lt;KeyType&gt;None&lt;/KeyType&gt;
+      &lt;ChangeType&gt;None&lt;/ChangeType&gt;
+    &lt;/InputColumnToDBColumn&gt;
+    &lt;InputColumnToDBColumn&gt;
+      &lt;IdentificationString&gt;OLE DB Source.Outputs[OLE DB Source Output].Columns[Nuoc]&lt;/IdentificationString&gt;
+      &lt;ColumnName&gt;Nuoc&lt;/ColumnName&gt;
+      &lt;KeyType&gt;None&lt;/KeyType&gt;
+      &lt;ChangeType&gt;None&lt;/ChangeType&gt;
+    &lt;/InputColumnToDBColumn&gt;
+    &lt;InputColumnToDBColumn&gt;
+      &lt;IdentificationString&gt;OLE DB Source.Outputs[OLE DB Source Output].Columns[TenCH]&lt;/IdentificationString&gt;
+      &lt;ColumnName&gt;TenCH&lt;/ColumnName&gt;
+      &lt;KeyType&gt;None&lt;/KeyType&gt;
+      &lt;ChangeType&gt;HistoricalAttribute&lt;/ChangeType&gt;
+    &lt;/InputColumnToDBColumn&gt;
+    &lt;InputColumnToDBColumn&gt;
+      &lt;IdentificationString&gt;Check StoreTypeID exist.Outputs[Lookup Match Output].Columns[TenLoaiCH]&lt;/IdentificationString&gt;
+      &lt;ColumnName&gt;TenLoaiCH&lt;/ColumnName&gt;
+      &lt;KeyType&gt;None&lt;/KeyType&gt;
+      &lt;ChangeType&gt;None&lt;/ChangeType&gt;
+    &lt;/InputColumnToDBColumn&gt;
+    &lt;InputColumnToDBColumn&gt;
+      &lt;IdentificationString&gt;OLE DB Source.Outputs[OLE DB Source Output].Columns[TrangThai]&lt;/IdentificationString&gt;
+      &lt;ColumnName&gt;TrangThai&lt;/ColumnName&gt;
+      &lt;KeyType&gt;None&lt;/KeyType&gt;
+      &lt;ChangeType&gt;None&lt;/ChangeType&gt;
+    &lt;/InputColumnToDBColumn&gt;
+  &lt;/InputToColumnsCollection&gt;
+  &lt;GeneratedComponentsIdentificationStrings&gt;
+    &lt;anyType xsi:type="xsd:string"&gt;Derived Column 2&lt;/anyType&gt;
+    &lt;anyType xsi:type="xsd:string"&gt;OLE DB Command 1&lt;/anyType&gt;
+    &lt;anyType xsi:type="xsd:string"&gt;Union All 1&lt;/anyType&gt;
+    &lt;anyType xsi:type="xsd:string"&gt;Derived Column 3&lt;/anyType&gt;
+    &lt;anyType xsi:type="xsd:string"&gt;Insert Destination&lt;/anyType&gt;
+    &lt;anyType xsi:type="xsd:string"&gt;OLE DB Command 2&lt;/anyType&gt;
+  &lt;/GeneratedComponentsIdentificationStrings&gt;
+  &lt;FailFixedAttribute&gt;true&lt;/FailFixedAttribute&gt;
+  &lt;FailChangeAttribute&gt;false&lt;/FailChangeAttribute&gt;
+  &lt;UseStartEndDate&gt;false&lt;/UseStartEndDate&gt;
+  &lt;CurrentIndicatorColumn&gt;TrangThai&lt;/CurrentIndicatorColumn&gt;
+  &lt;InferredIndicatorColumn /&gt;
+  &lt;ValueCurrent&gt;1&lt;/ValueCurrent&gt;
+  &lt;ValueExpired&gt;2&lt;/ValueExpired&gt;
+  &lt;StartDateColumn /&gt;
+  &lt;EndDateColumn /&gt;
+  &lt;DateVariable /&gt;
+  &lt;EnableInferredSupport&gt;true&lt;/EnableInferredSupport&gt;
+&lt;/SCDWizardMetadata&gt;</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Handle Dim Cua Hang\OLE DB Source">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Handle Dim Cua Hang\Check StoreTypeID exist">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:boolean">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string"></Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:int">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Handle Dim Cua Hang\Check StoreID exist">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:boolean">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string"></Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:int">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Handle Dim Cua Hang\OLE DB Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
 </Objects>]]></DTS:DesignTimeProperties>
 </DTS:Executable>

@@ -11,8 +11,8 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="Package1"
   DTS:PackageType="5"
-  DTS:VersionBuild="1"
-  DTS:VersionGUID="{EA752C38-4E52-4FA1-A3BF-AAEB348FD24D}">
+  DTS:VersionBuild="2"
+  DTS:VersionGUID="{68901227-4370-4572-82C5-0798D6E3DED6}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -1426,7 +1426,7 @@ where [refTable].[mach] = ?</property>
         <NodeLayout
           Size="209,42"
           Id="Package\CuaHangJupiter Stage_NDS"
-          TopLeft="287,84" />
+          TopLeft="289,170" />
       </GraphLayout>
     </LayoutInfo>
   </Package>
